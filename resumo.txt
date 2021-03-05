@@ -1,0 +1,13 @@
+Camada de domínio - Diz respeito a regra de negócio da nossa aplicação. Como ela vai funcionar.
+
+Camada de infra - Diz respeito como a nossa aplicação vai se comunicar com o exterior. ex lib, database.
+
+
+Teste
+
+RF - Requisito Funcional (Cria-se um service para ele ex: Atualizar profile do ususário)
+RN - Regra de negócio ligada ao requisito funcional (Cria-se testes unitário para garantir que a regra de negócio irá funcionar)
+
+#sequência de testes:
+1 - Primeiro faz o caso que é pra da sucesso (Requisito). Ex: cadastrar usuário.
+2 - Depois , os demais testes são para testar os outros fluxos( regra de negócio). Ex. usuário não cadastrar um email de outro usuário.
