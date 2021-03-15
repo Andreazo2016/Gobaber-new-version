@@ -1,20 +1,24 @@
 import AppError from '@shared/errors/AppError'
 import FakeAppointmentsRepository from '../repositories/fakes/FakeAppointmentsRepository'
+import FakeNotificationRepository from '@modules/notifications/repositories/fake/FakeNotificationRepository'
 import CreateAppointmentService from './CreateAppointmentService'
 
 interface SutTypes {
     fakeAppointmentsRepository: FakeAppointmentsRepository;
     createAppointmentService: CreateAppointmentService;
+    fakeNotificationRepository: FakeNotificationRepository;
 }
 
 const sut = (): SutTypes => {
 
     const fakeAppointmentsRepository = new FakeAppointmentsRepository()
-    const createAppointmentService = new CreateAppointmentService(fakeAppointmentsRepository)
+    const fakeNotificationRepository = new FakeNotificationRepository()
+    const createAppointmentService = new CreateAppointmentService(fakeAppointmentsRepository, fakeNotificationRepository)
 
     return {
         fakeAppointmentsRepository,
-        createAppointmentService
+        createAppointmentService,
+        fakeNotificationRepository
     }
 }
 
@@ -23,21 +27,27 @@ describe('CreateAppointment', () => {
 
     it('should be able to create a new appointment', async () => {
 
-        const { createAppointmentService } = sut()
+        const { createAppointmentService, fakeNotificationRepository } = sut()
 
         jest.spyOn(Date, 'now').mockImplementationOnce(() => {
             return new Date(2020, 4, 10, 12).getTime()
         })
 
+        const createMethod = jest.spyOn(fakeNotificationRepository, 'create')
+
+        const date = new Date(2020, 4, 10, 13)
 
         const appointment = await createAppointmentService.execute({
-            date: new Date(2020, 4, 10, 13),
+            date,
             user_id: "user_id",
             provider_id: 'provider_id'
         })
 
+
+        const content = `Novo agendamento para o dia ${date.toLocaleDateString('pt-Br')} ás ${date.getHours()}:${date.getMinutes()}0`
         expect(appointment).toHaveProperty('id')
         expect(appointment.provider_id).toBe('provider_id')
+        expect(createMethod).toBeCalledWith({ recipient_id: 'provider_id', content })
 
     })
 
