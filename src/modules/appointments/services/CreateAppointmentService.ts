@@ -4,6 +4,7 @@ import { inject, injectable } from 'tsyringe'
 import AppError from '@shared/errors/AppError'
 import IAppointmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository'
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository'
+import ICacheProvider from '@shared/container/providers/cacheProvider/models/ICacheProvider'
 
 
 interface IRequestDTO {
@@ -19,12 +20,14 @@ class CreateAppointmentService {
         @inject('AppointmentsRepository')
         private appointmentRepository: IAppointmentsRepository,
         @inject('NotificationsRepository')
-        private notificationRepository: INotificationsRepository
+        private notificationRepository: INotificationsRepository,
+        @inject('CacheProvider')
+        private cacheProvider: ICacheProvider
     ) { }
 
     public async execute({ provider_id, user_id, date }: IRequestDTO): Promise<Appointment> {
 
-        
+
         const appointmentDate = startOfHour(date)
 
         if (isBefore(appointmentDate, Date.now())) throw new AppError(`you can not create an appointment on past date`)
@@ -50,6 +53,10 @@ class CreateAppointmentService {
             recipient_id: provider_id,
             content: `Novo agendamento para o dia ${dateFormatted}`
         })
+
+        const cacheKey = `provider-appointments:${provider_id}:${format(appointmentDate, 'yyyy-M-d')}`
+
+        await this.cacheProvider.invalidate(cacheKey)
 
         return appointment
 

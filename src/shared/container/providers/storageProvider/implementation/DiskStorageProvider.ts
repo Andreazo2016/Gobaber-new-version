@@ -5,7 +5,7 @@ import path from 'path'
 import uploadConfig from '@config/upload'
 
 class DiskStorageProvider implements IStorageProvider{
-   public async savaefile(file:string):Promise<string>{
+   public async savefile(file:string):Promise<string>{
        /**
         * Muda o arquivo da pasta tmp para uploads
         * 
