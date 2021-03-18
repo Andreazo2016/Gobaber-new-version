@@ -1,6 +1,6 @@
-const  {pathsToModuleNameMapper} = require('ts-jest/utils')
-const  {compilerOptions} = require('./tsconfig.json')
-module.exports =  {
+const { pathsToModuleNameMapper } = require('ts-jest/utils')
+const { compilerOptions } = require('./tsconfig.json')
+module.exports = {
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
@@ -14,15 +14,16 @@ module.exports =  {
   clearMocks: true,
 
   // Indicates whether the coverage information should be collected while executing the test
-   collectCoverage: true,
+  collectCoverage: true,
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
-   collectCoverageFrom: [
-     '<rootDir>/src/modules/**/services/*ts'
-   ],
+  collectCoverageFrom: [
+    '<rootDir>/src/modules/**/services/*ts',
+    '<rootDir>/src/modules/**/infra/http/controllers/*ts'
+  ],
 
   // The directory where Jest should output its coverage files
-   coverageDirectory: 'coverage',
+  coverageDirectory: 'coverage',
 
   // An array of regexp pattern strings used to skip coverage collection
   // coveragePathIgnorePatterns: [
@@ -36,7 +37,7 @@ module.exports =  {
   coverageReporters: [
     "text-summary",
     "lcov",
-    
+
   ],
 
   // An object that configures minimum threshold enforcement for coverage results
@@ -79,7 +80,7 @@ module.exports =  {
   // ],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths,{prefix:'<rootDir>/src/'}),
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/src/' }),
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],
@@ -91,7 +92,7 @@ module.exports =  {
   // notifyMode: "failure-change",
 
   // A preset that is used as a base for Jest's configuration
-   preset: 'ts-jest',
+  preset: 'ts-jest',
 
   // Run tests from one or more projects
   // projects: undefined,

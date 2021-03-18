@@ -53,5 +53,5 @@ Cria uma instância normal
 
 container.registerInstance<IMailProvider>(
   'MailProvider',
-  container.resolve(providers.mailProvider)
+  container.resolve(EtherealMailProvider)
 )

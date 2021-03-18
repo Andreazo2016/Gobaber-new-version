@@ -4,20 +4,24 @@ import app from '@shared/infra/http/app'
 import User from '@modules/users/infra/typeorm/entities/User'
 
 
+
+
 describe('UserController', () => {
+
   let userRepository: Repository<User>
   let connection: Connection
 
   beforeAll(async () => {
+
     await createConnection()
     connection = getConnection()
     if (connection.isConnected) {
-      console.log('conectado!!')
       await connection.runMigrations()
       userRepository = getRepository(User)
     } else {
       console.log('conexão fechada ainda!!')
     }
+
   })
 
   afterAll(async () => {
@@ -25,6 +29,7 @@ describe('UserController', () => {
     userRepository.remove(users)
     await connection.undoLastMigration();
     await connection.close()
+
   })
 
   it('sould be able return 200 ok', async () => {
@@ -64,11 +69,19 @@ describe('UserController', () => {
 
   it('sould be able to return 400 erro: duplicate email', async () => {
 
+    const user = userRepository.create({
+      name: 'another_name_user_test',
+      email: 'another_email_test@email.com',
+      password: '123321a'
+    })
+
+    await userRepository.save(user)
+
     await request(app)
       .post('/users')
       .send({
-        name: 'another_name_user',
-        email: 'another_email@email.com',
+        name: 'another_name_user_test',
+        email: 'another_email_test@email.com',
         password: '123321a'
       })
       .expect(400)
